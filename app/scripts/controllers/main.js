@@ -20,7 +20,7 @@ https://www.njuskalo.hr/iznajmljivanje-stanova
 &newBuilding=1 novogradnja
  */
 angular.module('njuskaloStanoviApp')
-  .controller('MainCtrl', function($scope, $http, $q) {
+  .controller('MainCtrl', function($scope, $http, $q, $timeout) {
     var TIMEOUT_MIN = 1000;
     var TIMEOUT_MAX = 5000;
     $scope.$http = $http;
@@ -87,24 +87,18 @@ angular.module('njuskaloStanoviApp')
       }
 
     };
-    $scope.generateTimeout = function () {
-    	return Math.floor((Math.random() * TIMEOUT_MAX) + TIMEOUT_MIN);	
+    $scope.generateTimeout = function() {
+      var timeout = Math.floor((Math.random() * TIMEOUT_MAX) + TIMEOUT_MIN);
+      console.log(timeout);
+      return timeout
     };
     $scope.improveInfo = function() {
-      var promiseChain = $q.when();
+      for (var i = 0; i < $scope.oglasi.length; i++) {
+        $timeout(function() {
+          $scope.getSingleAd($scope.oglasi[i]);
 
-      $scope.oglasi.forEach(function(oglas) {
-        promiseChain = promiseChain.then(function() {
-        	$timeout(function(){
-          		return $scope.getSingleAd(oglas);
-        	}, $scope.generateTimeout());
-        });
-      });
-
-      promiseChain.finally(function() {
-      	console.clear();
-      	console.log($scope.oglasi);
-      })
+        }, $scope.generateTimeout());
+      }
     };
     $scope.getSingleAd = function(ad) {
       $http.get("https://www.njuskalo.hr" + ad.link)
