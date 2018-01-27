@@ -1,8 +1,69 @@
-<div class="jumbotron">
-<div class="njuskalo-form">
-  <button class="btn btn-success" ng-click="loadAds()">Load ads</button>
-</div>
-<div class="njuskalo-oglasi">
-  
-</div>
+<div class="">
+  <div class="njuskalo-form col-xs-12 col-md-2 nop">
+    <form class="form-horizontal">
+      <fieldset>
+        <!-- Form Name -->
+        <legend>Search</legend>
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-xs-12">Zupanija:</label>
+          <div class="col-xs-9">
+            <select id="selectbasic" name="selectbasic" class="form-control" ng-model="form.zupanija" ng-options="zupanija.id as zupanija.name for zupanija in form.zupanije">
+            </select>
+          </div>
+        </div>
+        <!-- Text input-->
+        <div class="form-group multiput">
+          <label class="col-xs-12">Cijena:</label>
+          <div class="col-xs-4">
+            <input id="" name="" type="text" ng-model="form.cijena_od" placeholder="" class="form-control input-sm">
+          </div>
+          <span class="col-xs-1 nop">Do</span>
+          <div class="col-xs-4">
+            <input id="" name="" type="text" ng-model="form.cijena_do" placeholder="" class="form-control input-sm">
+          </div>
+        </div>
+        <!-- Text input-->
+        <div class="form-group multiput">
+          <label class="col-xs-12">Povrsina:</label>
+          <div class="col-xs-4">
+            <input id="" name="" type="text" placeholder="" ng-model="form.povrsina_od" class="form-control input-sm">
+          </div>
+          <span class="col-xs-1 nop">Do</span>
+          <div class="col-xs-4">
+            <input id="" name="" type="text" placeholder="" ng-model="form.povrsina_do" class="form-control input-sm">
+          </div>
+        </div>
+        <!-- Multiple Checkboxes -->
+        <div class="form-group">
+          <div class="col-xs-9">
+            <div class="checkbox nop col-xs-12">
+              <label for="checkboxes-0">
+                <input type="checkbox" ng-model="form.novogradnja"> Novogradnja
+              </label>
+            </div>
+            <div class="checkbox nop col-xs-12">
+              <label for="checkboxes-1">
+                <input type="checkbox" ng-model="form.oglasi_slika"> Oglasi sa slikom
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <button class="btn btn-success" ng-click="loadAds()">Rokaj</button>
+  </div>
+  <div class="njuskalo-oglasi col-xs-12 col-md-10">
+  	<div class="col-xs-6" ng-repeat="oglas in oglasi">
+  		<div class="inline-item">
+  			<img src="{{oglas.image}}">
+  		</div>
+  		<div class="col-xs-6">
+  			<div class="col-xs-12 nop" ng-click="getSingleAd(oglas)"><b>{{oglas.title}}</b></div>
+  			<div class="col-xs-12 nop">{{oglas.price_eur}} EUR</div>
+  			<div class="col-xs-12 nop">{{oglas.size}}m2</div>
+
+  		</div>
+  	</div>
+  </div>
 </div>
