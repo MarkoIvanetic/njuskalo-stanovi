@@ -92,15 +92,25 @@ angular.module('njuskaloStanoviApp')
       console.log(timeout);
       return timeout
     };
-    $scope.improveInfo = function() {
-      for (var i = 0; i < $scope.oglasi.length; i++) {
-        $timeout(function() {
-          $scope.getSingleAd($scope.oglasi[i]);
 
-        }, $scope.generateTimeout());
-      }
+
+    $scope.improveInfo = function() {
+      var adCount = 0;
+      var adMax = $scope.oglasi.length - 1;
+
+      function localGet() {
+        $scope.getSingleAd($scope.oglasi[adCount], function() {
+          adCount++;
+          $timeout(function() {
+            if ($scope.oglasi[adCount]) { 
+              localGet($scope.oglasi[adCount], adCount);
+            };
+          }, $scope.generateTimeout());
+        })
+      };
+      localGet();
     };
-    $scope.getSingleAd = function(ad) {
+    $scope.getSingleAd = function(ad, cb) {
       $http.get("https://www.njuskalo.hr" + ad.link)
         .then(function(response) {
 
@@ -110,7 +120,7 @@ angular.module('njuskaloStanoviApp')
           var adDetails = $(el).find('.table-summary--alpha');
           ad.naselje = adDetails.find("th:contains('Naselje')").siblings('td').text();
           ad.location_rating = $scope.getRatingForName(ad.naselje);
-
+          if (cb) { cb() }
         })
     };
     $scope.generateUrl = function(form, page) {
