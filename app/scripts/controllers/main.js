@@ -50,40 +50,48 @@ angular.module('njuskaloStanoviApp')
 
       for (var i = 1; i <= $scope.form.pages; i++) {
 
+        var counter = 0;
+        var localLoad = function(i) {
 
 
-        $http.get($scope.generateUrl($scope.form, i))
-          .then(function(response) {
+          $http.get($scope.generateUrl($scope.form, i))
+            .then(function(response) {
 
-            var el = document.createElement('div');
-            el.setAttribute("style", "display:none;");
-            el.innerHTML = response.data;
+              var el = document.createElement('div');
+              el.setAttribute("style", "display:none;");
+              el.innerHTML = response.data;
 
-            var oglasiStandard = $(el).find('.EntityList--Regular.EntityList--ListItemRegularAd')
-            oglasiStandard.find('.entity-tools').remove();
+              var oglasiStandard = $(el).find('.EntityList--Regular.EntityList--ListItemRegularAd')
+              oglasiStandard.find('.entity-tools').remove();
 
-            oglasiStandard.find("ul.EntityList-items > li:not('.EntityList-item--banner')").each(function() {
+              oglasiStandard.find("ul.EntityList-items > li:not('.EntityList-item--banner')").each(function() {
 
-              if ($(this).find('.entity-title a').text()) {
-                var oglas = {};
-                oglas.title = $(this).find('.entity-title a').text();
-                oglas.link = $(this).find('.entity-title a').attr('href');
+                if ($(this).find('.entity-title a').text()) {
+                  var oglas = {};
+                  oglas.title = $(this).find('.entity-title a').text();
+                  oglas.link = $(this).find('.entity-title a').attr('href');
 
-                oglas.image = $(this).find('.entity-thumbnail a img').attr('data-src');
+                  oglas.image = $(this).find('.entity-thumbnail a img').attr('data-src');
 
-                var sizeString = $(this).find('.entity-description-main').text().split('Stambena površina:')[1];
-                oglas.size = sizeString.match(/\d+/)[0];
+                  var sizeString = $(this).find('.entity-description-main').text().split('Stambena površina:')[1];
+                  oglas.size = sizeString.match(/\d+/)[0];
 
-                oglas.publication_date = $(this).find('.entity-pub-date time').attr('datetime');
-                oglas.price_hrk = $(this).find('.entity-prices .price.price--hrk').text().replace('.', '').replace(',', '').match(/\d+/)[0];
-                oglas.price_eur = $(this).find('.entity-prices .price.price--eur').text().replace('.', '').replace(',', '').match(/\d+/)[0];
+                  oglas.publication_date = $(this).find('.entity-pub-date time').attr('datetime');
+                  oglas.price_hrk = $(this).find('.entity-prices .price.price--hrk').text().replace('.', '').replace(',', '').match(/\d+/)[0];
+                  oglas.price_eur = $(this).find('.entity-prices .price.price--eur').text().replace('.', '').replace(',', '').match(/\d+/)[0];
 
-                $scope.oglasi.push(oglas);
-              }
+                  $scope.oglasi.push(oglas);
+                }
 
+              });
+              $timeout(function() {
+                counter++;
+                localLoad(counter);
+              }, $scope.generateTimeout())
             });
-            console.log($scope.oglasi);
-          });
+
+        };
+        localLoad(0);
       }
 
     };
@@ -102,7 +110,7 @@ angular.module('njuskaloStanoviApp')
         $scope.getSingleAd($scope.oglasi[adCount], function() {
           adCount++;
           $timeout(function() {
-            if ($scope.oglasi[adCount]) { 
+            if ($scope.oglasi[adCount]) {
               localGet($scope.oglasi[adCount], adCount);
             };
           }, $scope.generateTimeout());
