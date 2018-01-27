@@ -118,7 +118,7 @@ angular.module('njuskaloStanoviApp')
           el.innerHTML = response.data;
 
           var adDetails = $(el).find('.table-summary--alpha');
-          ad.naselje = adDetails.find("th:contains('Naselje')").siblings('td').text();
+          ad.naselje = adDetails.find("th:contains('Grad/Općina')").siblings('td').text();
           ad.location_rating = $scope.getRatingForName(ad.naselje);
           if (cb) { cb() }
         })
